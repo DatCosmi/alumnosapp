@@ -1,5 +1,13 @@
+import axios from 'axios';
 import React, {useState} from 'react';
-import {Text, View, Image, TextInput, TouchableOpacity} from 'react-native';
+import {
+  Text,
+  View,
+  Image,
+  TextInput,
+  TouchableOpacity,
+  ToastAndroid,
+} from 'react-native';
 import {styles, colores} from '../theme/theme';
 
 const initialState = {
@@ -13,6 +21,24 @@ export const Login = () => {
 
   const handleChange = (nom, valor) => {
     setDatos({...datos, [nom]: valor});
+  };
+
+  const handleSubmit = () => {
+    const {matricula, password} = datos;
+
+    axios
+      .post('http://10.0.2.2:5000/alumno/acceder', datos)
+      .then(function (response) {
+        // handle success
+        console.log(response);
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      })
+      .finally(function () {
+        ToastAndroid.show('Operación terminada', ToastAndroid.SHORT);
+      });
   };
 
   return (
@@ -40,7 +66,7 @@ export const Login = () => {
         value={password}
         onChangeText={valor => handleChange('password', valor)}></TextInput>
 
-      <TouchableOpacity style={{flex: 1}}>
+      <TouchableOpacity style={{flex: 1}} onPress={handleSubmit}>
         <View style={styles.loginBoton}>
           <Text style={styles.loginTextoBoton}>Ingresar</Text>
         </View>
